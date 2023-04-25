@@ -1,0 +1,305 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<model>
+  <root>
+    <snippet label="ExtAPI"><![CDATA[ExtAPI.]]></snippet>
+    <snippet label="Snippet Template"><![CDATA[""" Template to define a custom snippet.
+Snippets are existing lines of codes that can quickly and easily be inserted in the command line, saving you from repetitive typing.
+A snippet can contain editable fields, which are automatically selected for modification when the snippet is inserted.
+When a field is selected, you can type a new value to override the default value or let the default value remain.
+Pressing the Tab key moves the cursor to the next editable field.
+To define an editable field, you must use the following notation: '$' followed by '{i:default_value}' where i is the index of the field.
+For the first editable field, the value is 1.
+To reference an editable field that is already defined, you simply need to specify its index ('$' followed by the index '{i}').
+"""
+# The following example swaps two variable (foo and bar):
+${1:foo} = "${1}" # Type something to change the foo value. Press TAB to jump to the next editable field.
+${2:bar} = "${2}" # Now bar is highlighted and can be edited by typing another value.
+temp = ${1} 
+${1} = ${2} # Notice that both foo and bar values have changed.
+${2} = temp
+print("${1} = {0} and ${2} = {1}".format(${1}, ${2}))]]></snippet>
+    <snippet label="Rename mechanical Analysis According to their name in Workbench"><![CDATA[systems = GetAllSystems()
+newname = []
+for sys in systems:
+    if sys != systems[0]:
+        model = sys.GetContainer(ComponentName = "Model")
+        newname.append(sys.DisplayText)
+
+cmd = """
+newname = {}
+for i, analysis in enumerate(Model.Analyses):
+    analysis.Name = newname[i]
+""".format(newname)
+
+
+model.SendCommand(Language="Python", Command=cmd)]]></snippet>
+    <snippet label="Project Updating"><![CDATA[Project.Update()]]></snippet>
+    <snippet label="System deleting"><![CDATA[System.Delete()]]></snippet>
+    <snippet label="button"><![CDATA[import clr
+
+clr.AddReference('System.Windows.Forms')
+clr.AddReference('System.Drawing')
+
+from System.Windows.Forms import Application, Button, Form, TextBox
+from System.Drawing import Point
+
+form = Form()
+form.Text = "Hello World"
+
+button = Button()
+button.Text = "Apply"
+button.Location = Point(0, 100)
+
+txtbox1 = TextBox()
+form.Controls.Add(txtbox1)
+
+form.Controls.Add(button)
+
+Application.Run(form)]]></snippet>
+    <snippet label="button"><![CDATA[import clr
+clr.AddReference('System.Windows.Forms')
+clr.AddReference('System.Drawing')
+from System.Windows.Forms import Application, Button, Form, TextBox
+from System.Drawing import Point
+
+form = Form()
+form.Text = "Enter Analysis Names"
+button = Button(Text="Apply")
+button.Location = Point(0, 100)
+txtbox1 = TextBox()
+txtbox1.Location = Point(0, 0)
+txtbox2 = TextBox()
+txtbox2.Location = Point(0, 50)
+form.Controls.Add(txtbox1)
+form.Controls.Add(txtbox2)
+form.Controls.Add(button)
+
+def click(sender, event):
+    for sys in GetAllSystems():
+        model.append(sys.GetContainer(ComponentName = "Model"))
+        sys.DisplayText = event
+        
+    newname = [txtbox1.Text, txtbox2.Text]
+    for i, analysis in enumerate(Model.Analyses):
+        analysis.Name = newnames[i]
+    form.Close()
+
+button.Click += click
+Application.Run(form)]]></snippet>
+    <snippet label="Fenetre_pour_modifier_les_noms_des_blocs"><![CDATA[import clr
+clr.AddReference('System.Windows.Forms')
+clr.AddReference('System.Drawing')
+from System.Windows.Forms import Application, Button, Form, Label, TextBox, MessageBox
+from System.Drawing import Point, Font, ContentAlignment
+
+systems = GetAllSystems()
+
+form = Form()
+form.Text = "Enter Analysis Names"
+form.Width = 400
+form.Height = 250
+form.Font = Font("Calibri", 12, FontStyle.Regular)
+
+label1 = Label()
+label1.Text = "Enter Analysis Name:"
+label1.Location = Point(0, 30)
+label1.AutoSize = True
+label1.Font = Font("Calibri", 12, FontStyle.Regular)
+label1.TextAlign = ContentAlignment.MiddleRight
+
+txtbox1 = TextBox()
+txtbox1.Location = Point(200, 35)
+txtbox1.Width = 150
+
+label_name = Label()
+label_name.Text = ""
+label_name.Location = Point(200, 70)
+label_name.AutoSize = True
+label_name.Font = Font("Calibri", 12, FontStyle.Regular)
+
+label2 = Label()
+label2.Text = "Enter System Number:"
+label2.Location = Point(0, 95)
+label2.AutoSize = True
+label2.Font = Font("Calibri", 12, FontStyle.Regular)
+label2.TextAlign = ContentAlignment.MiddleRight
+
+txtbox2 = TextBox()
+txtbox2.Location = Point(200, 100)
+txtbox2.Width = 150
+
+button_apply = Button()
+button_apply.Text = "Apply"
+button_apply.Location = Point(50, 150)
+button_apply.Font = Font("Calibri", 12, FontStyle.Regular)
+
+button_cancel = Button()
+button_cancel.Text = "Cancel"
+button_cancel.Location = Point(220, 150)
+button_cancel.Font = Font("Calibri", 12, FontStyle.Regular)
+
+form.Controls.Add(label1)
+form.Controls.Add(txtbox1)
+form.Controls.Add(label_name)
+form.Controls.Add(label2)
+form.Controls.Add(txtbox2)
+form.Controls.Add(button_apply)
+form.Controls.Add(button_cancel)
+
+def click_apply(sender, event):
+    if not txtbox2.Text.isdigit() or int(txtbox2.Text) <= 0:
+        MessageBox.Show("Please enter a valid system number.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        return
+    sys_num = int(txtbox2.Text) - 1
+    if sys_num >= len(systems):
+        MessageBox.Show("System number is out of range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        return
+    sys = systems[sys_num]
+    model = sys.GetContainer(ComponentName="Model")
+    sys.DisplayText = txtbox1.Text
+    label_name.Text = txtbox1.Text
+
+def click_cancel(sender, event):
+    form.Close()
+
+button_apply.Click += click_apply
+button_cancel.Click += click_cancel
+form.ShowDialog()
+]]></snippet>
+    <snippet label="essai"><![CDATA[import clr
+clr.AddReference('System.Windows.Forms')
+clr.AddReference('System.Drawing')
+from System.Windows.Forms import Application, Button, Form, Label, TextBox, MessageBox
+from System.Drawing import Point, Font, ContentAlignment
+
+systems = GetAllSystems()
+
+form = Form()
+form.Text = "Enter Analysis Names"
+form.Width = 400
+form.Height = 250
+form.Font = Font("Calibri", 12, FontStyle.Regular)
+
+label1 = Label()
+label1.Text = "Enter Analysis Name:"
+label1.Location = Point(0, 30)
+label1.AutoSize = True
+label1.Font = Font("Calibri", 12, FontStyle.Regular)
+label1.TextAlign = ContentAlignment.MiddleRight
+
+txtbox1 = TextBox()
+txtbox1.Location = Point(200, 35)
+txtbox1.Width = 150
+
+label_name = Label()
+label_name.Text = ""
+label_name.Location = Point(200, 70)
+label_name.AutoSize = True
+label_name.Font = Font("Calibri", 12, FontStyle.Regular)
+
+label2 = Label()
+label2.Text = "Enter System Number:"
+label2.Location = Point(0, 95)
+label2.AutoSize = True
+label2.Font = Font("Calibri", 12, FontStyle.Regular)
+label2.TextAlign = ContentAlignment.MiddleRight
+
+txtbox2 = TextBox()
+txtbox2.Location = Point(200, 100)
+txtbox2.Width = 150
+
+button_apply = Button()
+button_apply.Text = "Apply"
+button_apply.Location = Point(50, 150)
+button_apply.Font = Font("Calibri", 12, FontStyle.Regular)
+
+button_cancel = Button()
+button_cancel.Text = "Cancel"
+button_cancel.Location = Point(220, 150)
+button_cancel.Font = Font("Calibri", 12, FontStyle.Regular)
+
+form.Controls.Add(label1)
+form.Controls.Add(txtbox1)
+form.Controls.Add(label_name)
+form.Controls.Add(label2)
+form.Controls.Add(txtbox2)
+form.Controls.Add(button_apply)
+form.Controls.Add(button_cancel)
+
+def click_apply(sender, event):
+    if not txtbox2.Text.isdigit() or int(txtbox2.Text) <= 0:
+        MessageBox.Show("Please enter a valid system number.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        return
+    sys_num = int(txtbox2.Text) - 1
+    if sys_num >= len(systems):
+        MessageBox.Show("System number is out of range.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        return
+    sys = systems[sys_num]
+    model = sys.GetContainer(ComponentName="Model")
+    sys.DisplayText = txtbox1.Text
+    label_name.Text = txtbox1.Text
+
+    # Ajout de cette ligne pour afficher le résultat directement après avoir cliqué sur "Apply"
+    message = "The analysis name is: {}\nThe system number is: {}".format(txtbox1.Text, txtbox2.Text)
+    MessageBox.Show(message)
+
+def click_cancel(sender, event):
+    form.Close()
+
+button_apply.Click += click_apply
+button_cancel.Click += click_cancel
+form.ShowDialog()
+]]></snippet>
+    <snippet label="Delete system"><![CDATA[import clr
+clr.AddReference('System.Windows.Forms')
+clr.AddReference('System.Drawing')
+from System.Windows.Forms import Application, Button, Form, Label, TextBox, DialogResult, MessageBox
+from System.Drawing import Point, Font, ContentAlignment, FontStyle
+
+form = Form()
+form.Text = "Analysis to be deleted"
+form.Width = 400
+form.Height = 250
+form.Font = Font("Calibri", 12, FontStyle.Regular)
+
+label1 = Label()
+label1.Text = "Enter Analysis Name:"
+label1.Location = Point(0, 30)
+label1.AutoSize = True
+label1.Font = Font("Calibri", 12, FontStyle.Regular)
+label1.TextAlign = ContentAlignment.MiddleRight
+
+txtbox1 = TextBox()
+txtbox1.Location = Point(200, 35)
+txtbox1.Width = 150
+
+button_delete = Button()
+button_delete.Text = "Delete"
+button_delete.Location = Point(50, 150)
+button_delete.Font = Font("Calibri", 12, FontStyle.Regular)
+
+
+form.Controls.Add(label1)
+form.Controls.Add(txtbox1)
+form.Controls.Add(button_delete)
+
+
+def click_delete(sender, event):
+    sys_found = False
+    for sys in GetAllSystems():
+        if sys.DisplayText == txtbox1.Text:
+            sys_found = True
+            sys.Delete()
+            form.Close()
+
+            break
+
+button_delete.Click += click_delete
+form.ShowDialog()
+]]></snippet>
+    <snippet label="add_system"><![CDATA[template1 = GetTemplate(
+    TemplateName="Static Structural",
+    Solver="ANSYS")
+system1 = template1.CreateSystem()]]></snippet>
+  </root>
+</model>
